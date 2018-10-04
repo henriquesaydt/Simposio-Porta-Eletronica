@@ -6,32 +6,33 @@
 #define SS_PIN 53
 #define RST_PIN 5
 
-MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
+MFRC522 mfrc522(SS_PIN, RST_PIN); // Cria instancia MFRC522.
 Servo motor;
 LiquidCrystal lcd(6, 7, 9, 4, 3, 2); 
 
  
 char st[20];
-char senhaCorreta[7] = "666666";
+char senhaCorreta[7] = "123456";
 char senha[7];
 int j,i,anl1;
+bool porta_Aberta = 0;
  
 void setup() 
 {
   Serial.begin(9600);
   SPI.begin();// Inicia  SPI bus
   //Botões do Tecladinho
-  pinMode(22, INPUT_PULLUP);
-  pinMode(23, INPUT_PULLUP);
-  pinMode(24, INPUT_PULLUP);
-  pinMode(25, INPUT_PULLUP);
-  pinMode(26, INPUT_PULLUP);
-  pinMode(27, INPUT_PULLUP);
-  pinMode(28, INPUT_PULLUP);
-  pinMode(29, INPUT_PULLUP);
-  pinMode(30, INPUT_PULLUP);
-  pinMode(31, INPUT_PULLUP);
-  pinMode(32, INPUT_PULLUP);
+  pinMode(22, INPUT_PULLUP); //BOTÃO ENTER
+  pinMode(23, INPUT_PULLUP); //BOTÃO 0
+  pinMode(24, INPUT_PULLUP); //BOTÃO 1
+  pinMode(25, INPUT_PULLUP); //BOTÃO 2
+  pinMode(26, INPUT_PULLUP); //BOTÃO 3
+  pinMode(27, INPUT_PULLUP); //BOTÃO 4
+  pinMode(28, INPUT_PULLUP); //BOTÃO 5
+  pinMode(29, INPUT_PULLUP); //BOTÃO 6
+  pinMode(30, INPUT_PULLUP); //BOTÃO 7
+  pinMode(31, INPUT_PULLUP); //BOTÃO 8
+  pinMode(32, INPUT_PULLUP); //BOTÃO 9
   
   
   motor.attach(8);
@@ -51,7 +52,7 @@ void loop()
       Serial.println("Digite a senha");
       lcd.clear();
       lcd.print("Digite a senha");
-      delay(1000);
+      delay(500);
       
       for (j=0;j<6;j++){
         for(;;){
@@ -59,60 +60,90 @@ void loop()
             Serial.println("Botão 0 \n indice:");
             Serial.print(j);
             senha[j] = '0';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(24) == LOW){
             Serial.println("Botão 1 \n indice:");
             Serial.print(j);
             senha[j] = '1';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(25) == LOW){
             Serial.println("Botão 2 \n indice:");
             Serial.print(j);
             senha[j] = '2';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(26) == LOW){
             Serial.println("Botão 3 \n indice:");
             Serial.print(j);
             senha[j] = '3';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(27) == LOW){
             Serial.println("Botão 4 \n indice:");
             Serial.print(j);
             senha[j] = '4';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(28) == LOW){
             Serial.println("Botão 5 \n indice:");
             Serial.print(j);
             senha[j] = '5';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(29) == LOW){
             Serial.println("Botão 6 \n indice:");
             Serial.print(j);
             senha[j] = '6';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(30) == LOW){
             Serial.println("Botão 7 \n indice:");
             Serial.print(j);
             senha[j] = '7';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(31) == LOW){
             Serial.println("Botão 8 \n indice:");
             Serial.print(j);
             senha[j] = '8';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else if(digitalRead(32) == LOW){
             Serial.println("Botão 9 \n indice:");
             Serial.print(j);
             senha[j] = '9';
+            while(digitalRead(23) == LOW){
+              continue;
+            }
             break;
           }
           else{
@@ -124,7 +155,6 @@ void loop()
         lcd.print(senha[j]);
         
         Serial.println(j);
-        delay(700);
       }
       Serial.println(senha);
       Serial.println(senhaCorreta);
@@ -169,13 +199,18 @@ void loop()
     delay(2000);
     lcd.clear();
     lcd.print("Porta aberta!");
+    while(porta_Aberta == 0){
+      if(!(analogRead(A0) <= 800)){
+        porta_Aberta = 1;
+      }
+    }
   }
   else 
   {
     Serial.println("Acesso Negado!");
     lcd.clear();
     lcd.print("Acesso Negado!");
-    delay(3000);
+    delay(2500);
     mensageminicial();
   }
 
@@ -200,13 +235,14 @@ void verificaSenha()
     delay(2000);
     lcd.clear();
     lcd.print("Porta aberta!");
+    porta_Aberta = 1;
   }
   else 
   {
     Serial.println("Acesso Negado!");
     lcd.clear();
     lcd.print("Acesso Negado!");
-    delay(3000);
+    delay(2500);
     mensageminicial();
   }
 }
